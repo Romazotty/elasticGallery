@@ -27,5 +27,9 @@ Insert into your HTML markup:
         ...
     </div>
 
+Set the number of rows to display: 
 
+    $('#elasticGallery').elasticGallery({
+      row: '3'
+    });
 
