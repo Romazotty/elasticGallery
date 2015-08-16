@@ -1,4 +1,4 @@
-/**
+/*!
 * elasticGallery - Simple adaptive gallery.
 *
 * @author Romazotty <faker152@mail.ru>
