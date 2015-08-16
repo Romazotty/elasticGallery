@@ -1,3 +1,12 @@
+/**
+* elasticGallery - Simple adaptive gallery.
+*
+* @author Romazotty <faker152@mail.ru>
+* @license Apache 2.0
+* @link https://github.com/Romazotty/elasticGallery
+* @version 1.0
+*/
+
 (function( $ ) {
     var defaults = {
         'row' : '2'
