@@ -1,0 +1,2 @@
+# elasticGallery
+Simple adaptive gallery
