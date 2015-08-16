@@ -1,6 +1,6 @@
 #elasticGallery
 
-Simple adaptive gallery for laptop or mobile device.
+Simple adaptive gallery. Looks great on laptop and mobile device.
 
 
 INSTALLATION
