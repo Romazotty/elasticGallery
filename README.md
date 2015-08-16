@@ -12,8 +12,8 @@ Connect scripts in the specified sequence:
 
     <!-- elasticGallery -->
     <link type="text/css" rel="stylesheet" href="path/to/css/elasticGallery.css" />  
-		<script type="text/javascript" src="path/to/js/elasticGallery.js"></script>  
-		<!-- //elasticGallery -->
+    <script type="text/javascript" src="path/to/js/elasticGallery.js"></script>  
+    <!-- //elasticGallery -->
 
 QUICK START
 -----------
