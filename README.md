@@ -8,10 +8,10 @@ INSTALLATION
 
 Connect scripts in the specified sequence:
 
-      	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>  
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>  
 
-      	<!-- elasticGallery -->
-      	<link type="text/css" rel="stylesheet" href="path/to/css/elasticGallery.css" />  
+    <!-- elasticGallery -->
+    <link type="text/css" rel="stylesheet" href="path/to/css/elasticGallery.css" />  
 		<script type="text/javascript" src="path/to/js/elasticGallery.js"></script>  
 		<!-- //elasticGallery -->
 
@@ -28,8 +28,12 @@ Insert into your HTML markup:
     </div>
 
 Set the number of rows to display: 
-
-    $('#elasticGallery').elasticGallery({
-      row: '3'
-    });
+  
+    <script type="text/javascript">
+      $(document).ready(function(){
+        $('#elasticGallery').elasticGallery({
+          row: '3'
+        });
+      });
+    </script>
 
