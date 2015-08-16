@@ -1,5 +1,4 @@
 #elasticGallery
-=============================
 
 Simple adaptive gallery for laptop or mobile device.
 
