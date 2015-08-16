@@ -1,7 +1,7 @@
-elasticGallery
+#elasticGallery
 =============================
 
-Simple adaptive gallery
+Simple adaptive gallery for laptop or mobile device.
 
 
 INSTALLATION
