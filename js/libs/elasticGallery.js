@@ -4,108 +4,160 @@
 * @author Romazotty <faker152@mail.ru>
 * @license Apache 2.0
 * @link https://github.com/Romazotty/elasticGallery
-* @version 1.0
+* @version 2.0
 */
 
-(function( $ ) {
-    var defaults = {
-        'row' : '2'
-    };
+function elasticGallery(options){
+	var gallery = options.gallery;
+	var row = options.row || 3;
 
-	var methods = {
+	var container = gallery.querySelector('.galleryContainer');
 
-	    init:function(params) {
-	        if (params) {
-	        	$.extend(defaults, params);
-	        }
+	gallery.onclick = function(e){
+		var target = e.target;
 
-	        this.prepend('<div id="loader-wrapper"><div id="loader"></div></div>');				
-	        methods.preparation(this);
-	        return 	this.each(function(){
-	         			$(window).one('load', {item: $(this)}, function(event) {
-	         				methods.gentlyShow(methods.resizePicture(event.data.item));
-	         			});
-	         			$(window).on('resize', {item: $(this)}, function(event) {
-	         				methods.resizePicture(event.data.item);
-	         			});
-	         		});
-	    },
+		if(target.tagName == 'IMG'){
+			if(target.classList.contains('fullImg')){
+				var opened = container.querySelector('.isOpen');
+				var next = opened.parentNode.nextElementSibling;
 
-	    preparation: function(self){
-	    	var containerSide  	= self.width(),
-	            elemInRow       = Math.floor(parseFloat(containerSide / 200)) > 4 ? Math.floor(parseFloat(containerSide / 200)) : 4,
-	            elemSide       	= parseFloat(containerSide / elemInRow).toFixed(5);
+				if(next === null) {
+					nextImg(container.firstElementChild);
+				} else {
+					nextImg(next);
+				}
 
-	            console.log(containerSide);
+				opened.classList.remove('isOpen');
+			} else {
+				target.classList.add('isOpen');
+				openImg(target);
+			}
+		}
 
-			self.css({
-				'height': elemSide * defaults.row
-			});
-
-			self.find('a').css({
-			    'width': elemSide, 
-        		'height': elemSide
-			}); 			
-	    },
-
-	    resizePicture: function(self){
-	    	methods.preparation(self);
-			self.find('a').each(function(){
-		    	var container	= $(this),
-		    		picture 	= container.find('img'), 
-		    		marginLeft 	= 0,
-		    		marginTop 	= 0;
-
-		    	if(picture[0].width > picture[0].height){
-	                picture.css({'width': 'auto', 'height': '100%'});  
-	                setTimeout(function(){
-	                	marginLeft  = (picture[0].width - container.width()) / 2;     
-	                	picture.css({'margin-left': '-' + marginLeft + 'px'}); 
-	                }, 150);            
-	            }
-
-	            if(picture[0].width < picture[0].height){
-	                picture.css({'width': '100%', 'height': 'auto'});  
-	                setTimeout(function(){                        
-		                marginTop   = (picture[0].height - container.height()) / 2;
-		                picture.css({'margin-top': '-' + marginTop + 'px'});
-	                }, 150);            
-	            }
-
-	            if(picture[0].width == picture[0].height){
-	                picture.css({
-	                    'width': '100%', 
-	                    'height': '100%', 
-	                    'margin': '0px'
-	                });
-	            }
-	        });
-
-			return self;
-	    },
-
-	    gentlyShow: function(self){
-	    	self.find('#loader-wrapper').remove();
-	    	$.each(self.find('a'), function(i, elem){   
-			    setTimeout(function(){
-			       $(elem).animate({'opacity': '1'}, 2000);
-			    },400 + ( i * 100 ));
-			});
-	    }, 
+		if(target.classList.contains('wrapperForFullImg')){
+			closeImg();
+		}
 	};
-	 
-	$.fn.elasticGallery = function(method){
-	    if ( methods[method] ) {
-	        // если запрашиваемый метод существует, мы его вызываем
-	        // все параметры, кроме имени метода прийдут в метод
-	        // this так же перекочует в метод
-	        return methods[ method ].apply( this, Array.prototype.slice.call( arguments, 1 ));
-	    } else if ( typeof method === 'object' || ! method ) {
-	        // если первым параметром идет объект, либо совсем пусто
-	        // выполняем метод init
-	        return methods.init.apply( this, arguments );
-	    } else {
-	        console.log( 'Метод "' +  method + '" не найден в плагине jQuery.mySimplePlugin' );
-	    }
+
+	addWrap(gallery);
+	addLoader(container);
+
+	window.onload = function(){
+		gentleShow(resizeAllPreview(container));
 	};
-})(jQuery);
+
+	/* Подготавливаем контейнер к отображению */
+	function prepare(container){
+		var containerSide	= container.clientWidth;
+		var elemInRow = Math.floor(parseFloat(containerSide / 200)) > 4 ? Math.floor(parseFloat(containerSide / 200)) : 4;
+		var elemSide = parseFloat(containerSide / elemInRow).toFixed(5);
+
+		container.style.height = elemSide * row + "px";
+		container.querySelectorAll('a').forEach(function(item){
+			item.style.width = elemSide + "px";
+			item.style.height = elemSide + "px";
+		});
+	}
+
+	/* Выравниваем все изображения */
+	function resizeAllPreview(container){
+		prepare(container);
+
+		container.querySelectorAll('a').forEach(function(item){
+			item.classList.remove('opened');
+			resizePreview(item);
+		});
+
+		return container;
+	}
+
+	/* Выравниваем одно изображение */
+	function resizePreview(link){
+		var img = link.querySelector('img');
+		var	marginLeft = 0;
+		var	marginTop = 0;
+
+		if(img.clientWidth > img.clientHeight){
+			img.style.width = "auto";
+			img.style.height = "100%";
+
+			setTimeout(function(){
+				marginLeft = (img.clientWidth - link.clientWidth) / 2;
+				img.style.marginLeft = '-' + marginLeft + 'px';
+			}, 10);
+		} else if(img.clientWidth < img.clientHeight){
+			img.style.width = "100%";
+			img.style.height = "auto";
+
+			setTimeout(function(){
+				marginTop = (img.clientHeight - link.clientHeight) / 2;
+				img.style.marginTop = '-' + marginTop + 'px';
+			}, 10);
+		} else {
+			img.style.width = "100%";
+			img.style.height = "100%";
+			img.style.margin = "0px";
+		}
+	}
+
+	/* Плавный показ галереи*/
+	function gentleShow(container){
+		removeLoader(container);
+
+		container.querySelectorAll('a').forEach(function(item, i){
+			setTimeout(function(){
+				item.style.opacity = "1";
+			},400 + ( i * 100 ));
+		});
+	}
+
+	/* Добавляем индикатор загрузки */
+	function addLoader(container){
+		var loader = document.createElement('div');
+		loader.setAttribute('id', 'loader-wrapper');
+		loader.innerHTML = "<div id='loader'></div>";
+		container.insertBefore(loader, container.firstChild);
+	}
+
+	/* Удаляем индикатор загрузки */
+	function removeLoader(container){
+		container.removeChild(container.querySelector('#loader-wrapper'));
+	}
+
+	/* Добавляем обертку для большого изображения */
+	function addWrap(container){
+		var wrapperForFullImg = document.createElement('div');
+		wrapperForFullImg.setAttribute('class', 'wrapperForFullImg');
+
+		var fullImg = document.createElement('img');
+		fullImg.setAttribute('src', '');
+		wrapperForFullImg.appendChild(fullImg);
+
+		container.insertBefore(wrapperForFullImg, container.firstChild);
+	}
+
+	function openImg(img){
+		var wrapperForFullImg = gallery.querySelector('.wrapperForFullImg');
+
+		var fullImg = gallery.querySelector('.wrapperForFullImg img');
+		fullImg.src = img.src;
+		fullImg.classList.add('fullImg');
+
+		fullImg.style.height = gallery.clientHeight * 0.8 + "px";
+		fullImg.style.width = "auto";
+		fullImg.style.marginTop = gallery.clientHeight * 0.1 + "px";
+
+		wrapperForFullImg.style.display = "block";
+	}
+
+	/* Следующее изображение */
+	function nextImg(link){
+		openImg(link.querySelector('img'));
+		link.querySelector('img').classList.add('isOpen');
+	}
+
+	/* Закрываем большое изображение */
+	function closeImg(){
+		gallery.querySelector('.wrapperForFullImg').style.display = "none";
+	}
+}
