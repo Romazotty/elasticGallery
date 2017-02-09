@@ -10,6 +10,8 @@
 function elasticGallery(options){
 	var gallery = options.gallery;
 	var row = options.row || 3;
+	var minCountPerLine = options.minCountPerLine || 6;
+	var maxSide = options.masSide || 180;
 
 	var container = gallery.querySelector('.galleryContainer');
 
@@ -42,14 +44,18 @@ function elasticGallery(options){
 	addWrap(gallery);
 	addLoader(container);
 
-	window.onload = function(){
-		gentleShow(resizeAllPreview(container));
-	};
+  window.onload = function(){
+    gentleShow(resizeAllPreview(container));
+  };
+
+  window.onresize = function(){
+    resizeAllPreview(container);
+  };
 
 	/* Подготавливаем контейнер к отображению */
 	function prepare(container){
 		var containerSide	= container.clientWidth;
-		var elemInRow = Math.floor(parseFloat(containerSide / 200)) > 4 ? Math.floor(parseFloat(containerSide / 200)) : 4;
+		var elemInRow = Math.floor(parseFloat(containerSide / maxSide)) > minCountPerLine ? Math.floor(parseFloat(containerSide / maxSide)) : minCountPerLine;
 		var elemSide = parseFloat(containerSide / elemInRow).toFixed(5);
 
 		container.style.height = elemSide * row + "px";
