@@ -9,9 +9,9 @@
 
 function elasticGallery(options){
 	var gallery = options.gallery;
-	var row = options.row || 3;
-	var minCountPerLine = options.minCountPerLine || 6;
-	var maxSide = options.masSide || 180;
+	var row = options.row || 3; // количество строк с изображениями
+	var minCountPerLine = options.minCountPerLine || 6; // минимально количество изображений в строке
+	var maxSide = options.masSide || 180; // максимальный размер ихображений
 
 	var container = gallery.querySelector('.galleryContainer');
 
